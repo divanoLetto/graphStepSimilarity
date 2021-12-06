@@ -2,7 +2,7 @@
 
 import argparse
 
-def parameter_parser():
+def parameter_parser(model_save_path):
     """
     A method to parse up command line parameters.
     The default hyperparameters give a high performance model without grid search.
@@ -21,7 +21,7 @@ def parameter_parser():
 
     parser.add_argument("--epochs",
                         type=int,
-                        default=5,
+                        default=2,
 	                help="Number of training epochs. Default is 5.")
 
     parser.add_argument("--filters-1",
@@ -31,13 +31,28 @@ def parameter_parser():
 
     parser.add_argument("--filters-2",
                         type=int,
-                        default=64,
+                        default=128,
 	                help="Filters (neurons) in 2nd convolution. Default is 64.")
 
     parser.add_argument("--filters-3",
                         type=int,
-                        default=32,
+                        default=128,
 	                help="Filters (neurons) in 3rd convolution. Default is 32.")
+
+    parser.add_argument("--filters-4",
+                        type=int,
+                        default=128,
+                        help="Filters (neurons) in 3rd convolution. Default is 32.")
+
+    parser.add_argument("--filters-5",
+                        type=int,
+                        default=64,
+                        help="Filters (neurons) in 3rd convolution. Default is 32.")
+
+    parser.add_argument("--filters-6",
+                        type=int,
+                        default=32,
+                        help="Filters (neurons) in 3rd convolution. Default is 32.")
 
     parser.add_argument("--tensor-neurons",
                         type=int,
@@ -78,12 +93,12 @@ def parameter_parser():
                         dest="histogram",
                         action="store_true")
 
-    parser.set_defaults(histogram=False)
+    parser.set_defaults(histogram=True)
 
     parser.add_argument("--save-path",
                         type=str,
-                        default=None,
-                        help="Where to save the trained model")
+                        default=model_save_path,
+                        help="Model saves path")
 
     parser.add_argument("--load-path",
                         type=str,

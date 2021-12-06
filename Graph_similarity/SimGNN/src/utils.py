@@ -44,7 +44,7 @@ def process_pair_graphh(graph_pair):
     g_2_edges = [[id2_num_node[e[0]], id2_num_node[e[1]]] for e in graph_pair[1].full_graph.edges]
     data["graph_1"] = g_1_edges
     data["graph_2"] = g_2_edges
-    data["ged"] = 1
+    data["ged"] = graph_pair[2]
     return data
 
 
@@ -60,11 +60,17 @@ def calculate_loss(prediction, target):
     score = (prediction-target)**2
     return score
 
+
 def calculate_normalized_ged(data):
     """
     Calculating the normalized GED for a pair of graphs.
     :param data: Data table.
     :return norm_ged: Normalized GED score.
     """
-    norm_ged = data["ged"]/(0.5*(len(data["labels_1"])+len(data["labels_2"])))
+    norm_ged = data["ged"]  # /(0.5*(len(data["labels_1"])+len(data["labels_2"])))
     return norm_ged
+
+
+def reverse_normalized_ged(value):
+    value = value
+    return value

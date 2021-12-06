@@ -1,7 +1,7 @@
 import time
 from pathlib import Path
-from Nodes.Node import FlatNode
-from Nodes.Node_utils import get_nodes_from_datas, get_all_neighbor_nodes
+from Graphh.Node import FlatNode
+from Graphh.Node_utils import get_nodes_from_datas
 from Parser.Parser import parse_file
 from Parser.parser_utils import check_just_conteiner
 from utils import raplace_nodes
@@ -55,16 +55,16 @@ def make_graph_simplex(file_name):
         return G_simplex
 
 
-def make_graph_simplex_direct(file_name):
+def make_graph_simplex_direct(file_name, graph_saves_base_paths, dataset_path):
     name = os.path.splitext(file_name)[0]
-    graph_saves_paths = 'C:/Users/Computer/PycharmProjects/graphStepSimilarity/graph_save/simplex_direct/' + name + '.graphml'
+    graph_saves_paths = graph_saves_base_paths + name + '.graphml'
     graph_path = Path(graph_saves_paths)
 
     if graph_path.exists():
         G_simplex_d = nx.read_graphml(graph_saves_paths)
         return G_simplex_d
     else:
-        headers, datas = parse_file(file_name)
+        headers, datas = parse_file(file_name, dataset_path=dataset_path)
         print("file " + file_name + " parsed")
         all_flat_nodes = get_nodes_from_datas(datas)
         print("   All nodes obtained")

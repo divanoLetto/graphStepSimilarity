@@ -1,22 +1,13 @@
-import pickle
 from Graph_similarity.beivecchimetodi.Jaccard_similarity import jaccard_similarity
-from Graphh.Graphh import Graphh
-from Graph_similarity.Graph_similarity import spectrum_distance
-from Graph_similarity.Wasserstein import calculate_node_correctness, calculate_node_errors, calc_wassertein_discrepancy
-from Nodes.Node_utils import get_nodes_type_hystogramm, get_num_neighbor_for_node_type, get_composed_node_types
-from Parser.Parser import parse_file
+from Graphh.Node_utils import get_nodes_type_hystogramm
 from Parser.Make_graph import *
 from Printing_and_plotting.Printing import write_dataFrame, write_dataFrame_ordered_by_name
 from mathematic_utils.mathematic_utils import *
 import numpy as np
 import os
-from Plot import plt_histo
-import time
+from Printing_and_plotting.Plot import plt_histo
 from pandas import *
-import methods.EvaluationMeasure as Eval
-import methods.GromovWassersteinGraphToolkit as GwGt
 from utils import make_schema
-from scipy.optimize import linear_sum_assignment
 
 
 def main():

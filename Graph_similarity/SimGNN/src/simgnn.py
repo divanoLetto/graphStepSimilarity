@@ -1,5 +1,5 @@
 """SimGNN class and runner."""
-
+import math
 import glob
 import torch
 import random
@@ -136,7 +136,6 @@ class SimGNNTrainer(object):
         """
         Collecting the unique node idsentifiers.
         """
-        base_path = "C:/Users/Computer/Desktop/SimGNN-master"
         print("\nEnumerating unique labels.\n")
         self.training_graphs = training_set
         self.testing_graphs = test_set
@@ -194,7 +193,7 @@ class SimGNNTrainer(object):
         new_data["features_1"] = features_1
         new_data["features_2"] = features_2
 
-        norm_ged = data["ged"]/(0.5*(len(data["labels_1"])+len(data["labels_2"])))
+        norm_ged = calculate_normalized_ged(data)
 
         new_data["target"] = torch.from_numpy(np.exp(-norm_ged).reshape(1, 1)).view(-1).float()
         return new_data
@@ -212,7 +211,7 @@ class SimGNNTrainer(object):
             data = self.transfer_to_torch(data)
             target = data["target"]
             prediction = self.model(data)
-            losses = losses + torch.nn.functional.mse_loss(data["target"], prediction)
+            losses = losses + torch.nn.functional.mse_loss(target.reshape(1, 1), prediction)
         losses.backward(retain_graph=True)
         self.optimizer.step()
         loss = losses.item()
@@ -223,11 +222,9 @@ class SimGNNTrainer(object):
         Fitting a model.
         """
         print("\nModel training.\n")
-
         self.optimizer = torch.optim.Adam(self.model.parameters(),
                                           lr=self.args.learning_rate,
                                           weight_decay=self.args.weight_decay)
-
         self.model.train()
         epochs = trange(self.args.epochs, leave=True, desc="Epoch")
         for epoch in epochs:
@@ -241,7 +238,7 @@ class SimGNNTrainer(object):
                 loss = self.loss_sum/main_index
                 epochs.set_description("Epoch (Loss=%g)" % round(loss, 5))
 
-    def score(self):
+    def score(self, printt=False):
         """
         Scoring on the test set.
         """
@@ -249,13 +246,22 @@ class SimGNNTrainer(object):
         self.model.eval()
         self.scores = []
         self.ground_truth = []
+        values = []
         for graph_pair in tqdm(self.testing_graphs):
-            data = process_pair(graph_pair)
+            data = process_pair_graphh(graph_pair)
+            true_ged = data["ged"]
             self.ground_truth.append(calculate_normalized_ged(data))
             data = self.transfer_to_torch(data)
             target = data["target"]
             prediction = self.model(data)
             self.scores.append(calculate_loss(prediction, target))
+
+            target_recostructed = -math.log(target.item())
+            prediction_recostructed = -math.log(prediction.item())
+            values.append((target.item(), prediction.item(), target_recostructed, prediction_recostructed, true_ged))
+
+        for v in values:
+            print("\nt-p-tr-pr-ged: (" + str(v[0]) + "," + str(v[1]) + "," + str(v[2]) + "," + str(v[3]) + "," + str(v[4]) + ")")
         self.print_evaluation()
 
     def print_evaluation(self):

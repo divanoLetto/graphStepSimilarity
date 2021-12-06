@@ -1,9 +1,9 @@
 from Graph_similarity.Feature_based.Distance import canberra_distance
 from Graph_similarity.Feature_based.Graph_features import get_signature
 from Graphh.Graphh import Graphh
-from Nodes.Node_utils import get_nodes_type_hystogramm, get_num_neighbor_for_node_type, get_composed_node_types
+from Graphh.Node_utils import get_nodes_type_hystogramm
 from Parser.Make_graph import *
-from Printing_and_plotting.Printing import write_dataFrame, write_dataFrame_ordered_by_name, write_dataFrame_by_images
+from Printing_and_plotting.Printing import write_dataFrame, write_dataFrame_by_images
 import numpy as np
 import os
 from utils import make_schema

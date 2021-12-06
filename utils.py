@@ -1,4 +1,5 @@
 from pandas import DataFrame
+import random
 
 
 def find_node_by_id(all_nodes, id):
@@ -115,3 +116,13 @@ def make_schema(matrix, names):
     schema.index = [n for n in names]
     print(schema)
     return schema
+
+
+def split_training_testset(all_set, perc):
+    num_elem = len(all_set)
+    num_train_elem = int(num_elem * perc)
+    num_test_elem = num_elem - num_train_elem
+    random.shuffle(all_set)
+    training_set = all_set[:num_train_elem]
+    test_set = all_set[-num_test_elem:]
+    return training_set, test_set

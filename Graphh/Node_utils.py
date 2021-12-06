@@ -1,4 +1,4 @@
-from .Node import GenericNode, FlatNode
+from Graphh.Node import GenericNode, FlatNode
 from utils import split_recursive, split_composed_arguments, remove_first_last_space
 
 
