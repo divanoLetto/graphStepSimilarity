@@ -17,7 +17,7 @@ def main():
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
     # image_models_dir_path = base_path + "/images/models_images/"
     # image_parts_dir_path = base_path + "/images/models_images/parts/"
-    parts_graph_saves_path = base_path + "/matrix_saves/GwGt_direct/parts_graph_match/tmp/"
+    parts_graph_saves_path = base_path + "/matrix_saves/GwGt_direct/parts_graph_match/"
     # Wasserstein options
     num_iter = 2000
     ot_dict = {'loss_type': 'L2', 'ot_method': 'proximal', 'beta': 0.025, 'outer_iteration': num_iter,
