@@ -21,33 +21,33 @@ def parameter_parser(model_save_path):
 
     parser.add_argument("--epochs",
                         type=int,
-                        default=2,
+                        default=20,
 	                help="Number of training epochs. Default is 5.")
 
     parser.add_argument("--filters-1",
                         type=int,
-                        default=128,
-	                help="Filters (neurons) in 1st convolution. Default is 128.")
+                        default=256,
+	                help="Filters (neurons) in 1st convolution. Default is 1024.")
 
     parser.add_argument("--filters-2",
                         type=int,
-                        default=128,
-	                help="Filters (neurons) in 2nd convolution. Default is 64.")
+                        default=256,
+	                help="Filters (neurons) in 2nd convolution. Default is 512.")
 
     parser.add_argument("--filters-3",
                         type=int,
-                        default=128,
-	                help="Filters (neurons) in 3rd convolution. Default is 32.")
+                        default=256,
+	                help="Filters (neurons) in 3rd convolution. Default is 256.")
 
     parser.add_argument("--filters-4",
                         type=int,
                         default=128,
-                        help="Filters (neurons) in 3rd convolution. Default is 32.")
+                        help="Filters (neurons) in 3rd convolution. Default is 128.")
 
     parser.add_argument("--filters-5",
                         type=int,
                         default=64,
-                        help="Filters (neurons) in 3rd convolution. Default is 32.")
+                        help="Filters (neurons) in 3rd convolution. Default is 64.")
 
     parser.add_argument("--filters-6",
                         type=int,

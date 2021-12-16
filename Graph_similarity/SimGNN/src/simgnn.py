@@ -217,7 +217,7 @@ class SimGNNTrainer(object):
         loss = losses.item()
         return loss
 
-    def fit(self):
+    def fit(self, save_epochs):
         """
         Fitting a model.
         """
@@ -237,6 +237,9 @@ class SimGNNTrainer(object):
                 self.loss_sum = self.loss_sum + loss_score * len(batch)
                 loss = self.loss_sum/main_index
                 epochs.set_description("Epoch (Loss=%g)" % round(loss, 5))
+            if epoch > 0 and (epoch % save_epochs == 0):
+                print("Save at epoch " + str(epoch))
+                self.save()
 
     def score(self, printt=False):
         """

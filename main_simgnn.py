@@ -23,6 +23,7 @@ def main():
     model_name = "model1"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
     perc_train_test = 0.7
+    save_epochs = 5
 
     for file in os.listdir(path_dataset):
         if file.endswith(".stp") or file.endswith(".step"):
@@ -61,7 +62,7 @@ def main():
     if args.load_path:
         trainer.load()
     else:
-        trainer.fit()
+        trainer.fit(save_epochs)
     if args.save_path:
         trainer.save()
     trainer.score()
