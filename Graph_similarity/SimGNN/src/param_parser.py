@@ -2,7 +2,7 @@
 
 import argparse
 
-def parameter_parser(model_save_path):
+def parameter_parser(model_save_path, model_load_path, epochs):
     """
     A method to parse up command line parameters.
     The default hyperparameters give a high performance model without grid search.
@@ -21,7 +21,7 @@ def parameter_parser(model_save_path):
 
     parser.add_argument("--epochs",
                         type=int,
-                        default=20,
+                        default=epochs,
 	                help="Number of training epochs. Default is 5.")
 
     parser.add_argument("--filters-1",
@@ -102,7 +102,7 @@ def parameter_parser(model_save_path):
 
     parser.add_argument("--load-path",
                         type=str,
-                        default=None,
+                        default=model_load_path,
                         help="Load a pretrained model")
 
     return parser.parse_args()

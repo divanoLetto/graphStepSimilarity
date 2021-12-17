@@ -20,10 +20,16 @@ def main():
     image_dir_path = base_path + "/images/models_images/"
     excel_path = base_path + "/results/wassertein/parts_score_match.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model1"
+    model_name = "model"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
+    model_load_path = model_save_path  # None
+    epochs = 5
+    train = True
+    load = False
     perc_train_test = 0.7
     save_epochs = 5
+    seed = 0
+    random.seed(seed)
 
     for file in os.listdir(path_dataset):
         if file.endswith(".stp") or file.endswith(".step"):
@@ -54,14 +60,26 @@ def main():
             if dist > 1:  # todo fix this
                 dist = 1
             all_set.append([part_i, part_j, dist])
+    one_set = []
+    not_one_set = []
+    for example in all_set:
+        if example[2] != 1:
+            not_one_set.append(example)
+        else:
+            one_set.append(example)
+    random.shuffle(not_one_set)
+    one_set = one_set[:len(not_one_set)]
+    all_set = one_set + not_one_set
 
     training_set, test_set = split_training_testset(all_set, perc_train_test)
-    args = parameter_parser(model_save_path)
+    args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
     trainer = SimGNNTrainer_Big(args, training_set, test_set)
-    if args.load_path:
+    if load:
+        print("Load")
         trainer.load()
-    else:
+    if train:
+        print("Fit")
         trainer.fit(save_epochs)
     if args.save_path:
         trainer.save()

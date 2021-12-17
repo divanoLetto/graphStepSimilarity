@@ -1,6 +1,5 @@
 """SimGNN class and runner."""
 import math
-import glob
 import torch
 import random
 import numpy as np
@@ -8,6 +7,7 @@ from tqdm import tqdm, trange
 from torch_geometric.nn import GCNConv
 from .layers import AttentionModule, TenorNetworkModule
 from .utils import process_pair, calculate_loss, calculate_normalized_ged, process_pair_graphh
+from torch.utils.tensorboard import SummaryWriter
 
 
 class SimGNN(torch.nn.Module):
@@ -222,6 +222,8 @@ class SimGNNTrainer(object):
         Fitting a model.
         """
         print("\nModel training.\n")
+
+        writer = SummaryWriter()
         self.optimizer = torch.optim.Adam(self.model.parameters(),
                                           lr=self.args.learning_rate,
                                           weight_decay=self.args.weight_decay)
@@ -237,9 +239,12 @@ class SimGNNTrainer(object):
                 self.loss_sum = self.loss_sum + loss_score * len(batch)
                 loss = self.loss_sum/main_index
                 epochs.set_description("Epoch (Loss=%g)" % round(loss, 5))
+            writer.add_scalar("Loss/train", self.loss_sum, epoch)
             if epoch > 0 and (epoch % save_epochs == 0):
                 print("Save at epoch " + str(epoch))
                 self.save()
+        writer.flush()
+        writer.close()
 
     def score(self, printt=False):
         """
@@ -264,7 +269,7 @@ class SimGNNTrainer(object):
             values.append((target.item(), prediction.item(), target_recostructed, prediction_recostructed, true_ged))
 
         for v in values:
-            print("\nt-p-tr-pr-ged: (" + str(v[0]) + "," + str(v[1]) + "," + str(v[2]) + "," + str(v[3]) + "," + str(v[4]) + ")")
+            print("t-p-tr-pr-ged- diff: (" + format(v[0], '.3f') + "," + format(v[1], '.3f') + "," + format(v[2], '.3f') + "," + format(v[3], '.3f') + "," + format(v[4], '.3f') + "  " + format(abs(v[4]-v[3]), '.3f')+ " )")
         self.print_evaluation()
 
     def print_evaluation(self):
