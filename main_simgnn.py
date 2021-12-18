@@ -1,6 +1,5 @@
 from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big
 from Graph_similarity.SimGNN.src.utils import tab_printer
-from Graph_similarity.SimGNN.src.simgnn import SimGNNTrainer
 from Graph_similarity.SimGNN.src.param_parser import parameter_parser
 from Graphh.Graphh import Graphh
 from Parser.Make_graph import *
@@ -23,7 +22,7 @@ def main():
     model_name = "model"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
     model_load_path = model_save_path  # None
-    epochs = 5
+    epochs = 35
     train = True
     load = False
     perc_train_test = 0.7
