@@ -22,7 +22,7 @@ def main():
     model_name = "model"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
     model_load_path = model_save_path  # None
-    epochs = 35
+    epochs = 50
     train = True
     load = False
     perc_train_test = 0.7
@@ -59,6 +59,7 @@ def main():
             if dist > 1:  # todo fix this
                 dist = 1
             all_set.append([part_i, part_j, dist])
+    random.shuffle(all_set)
     one_set = []
     not_one_set = []
     for example in all_set:
@@ -66,7 +67,6 @@ def main():
             not_one_set.append(example)
         else:
             one_set.append(example)
-    random.shuffle(not_one_set)
     one_set = one_set[:len(not_one_set)]
     all_set = one_set + not_one_set
 
