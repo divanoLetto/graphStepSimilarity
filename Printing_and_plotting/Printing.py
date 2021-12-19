@@ -127,6 +127,10 @@ def write_dataFrame_by_images(df_dict, file_name, names, base_path, image_dir_pa
     worksheet = workbook.add_worksheet()
     row = 0
     num_models = len(names)
+    tmp = []
+    for n in names:
+        tmp.append(n.replace("-","_"))
+    names = tmp
 
     for k, (dataframe_key, dataframe) in enumerate(df_dict.items()):
         worksheet.write(row, 0, dataframe_key)

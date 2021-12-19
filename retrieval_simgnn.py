@@ -1,14 +1,14 @@
-from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big
+from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big, SimGNN_Big
 from Graph_similarity.SimGNN.src.utils import tab_printer
 from Graph_similarity.SimGNN.src.param_parser import parameter_parser
 from Graphh.Graphh import Graphh
 from Parser.Make_graph import *
 import os
-import pandas as pd
-import pathlib
 import random
-
-from utils import split_training_testset
+import numpy as np
+import pathlib
+from Printing_and_plotting.Printing import write_dataFrame
+from utils import make_schema
 
 
 def main():
@@ -17,7 +17,6 @@ def main():
     path_dataset = base_path + "/Dataset/"
     results_path = base_path + "/results/simgnn/"
     image_dir_path = base_path + "/images/models_images/"
-    excel_path = base_path + "/results/wassertein/parts_score_match.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
     model_name = "model1"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
@@ -29,6 +28,7 @@ def main():
     save_epochs = 5
     seed = 0
     random.seed(seed)
+    dataFrame_dict = {}
 
     for file in os.listdir(path_dataset):
         if file.endswith(".stp") or file.endswith(".step"):
@@ -46,52 +46,44 @@ def main():
         g.print_composition()
 
     all_set = []
-    df = pd.read_excel(excel_path)
-    double_hash = {}
-    for i in range(len(df.index.values)-1):
-        for j in range(len(df.columns.values)-1):
-            i_name = df.iloc[i+1, 0]
-            j_name = df.iloc[0, j+1]
-            dist = df.iloc[i + 1, j + 1]
-            if i_name not in double_hash.keys():
-                double_hash[i_name] = {}
-            double_hash[i_name][j_name] = dist
-
     for i, gh_i in enumerate(graphs_direct):
         for ph_i in gh_i.parts:
             for j, gh_j in enumerate(graphs_direct):
                 for ph_j in gh_j.parts:
-                    i_name = gh_i.get_name()+"-"+ph_i.get_name()
-                    j_name = gh_j.get_name()+"-"+ph_j.get_name()
-                    dist = double_hash[i_name][j_name]
-                    if dist > 1:  # todo fix this
-                        dist = 1
+                    dist = 0  # dont care
                     all_set.append([ph_i, ph_j, dist])
 
-    random.shuffle(all_set)
-    one_set = []
-    not_one_set = []
-    # Fix number of examples similar and dissimilar to 50% 5
-    for example in all_set:
-        if example[2] != 1:
-            not_one_set.append(example)
-        else:
-            one_set.append(example)
-    one_set = one_set[:len(not_one_set)]
-    all_set = one_set + not_one_set
-
-    training_set, test_set = split_training_testset(all_set, perc_train_test)
     args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
-    trainer = SimGNNTrainer_Big(args, training_set, test_set)
-    if load:
-        print("Load")
-        trainer.load()
-    if train:
-        print("Fit")
-        trainer.fit(save_epochs)
-        trainer.save()
-    trainer.score()
+    trainer = SimGNNTrainer_Big(args, all_set, [])
+    trainer.load()
+
+    tot_num_parts = 0
+    for i, gh_i in enumerate(graphs_direct):
+        tot_num_parts += len(gh_i.parts)
+
+    names_parts = []
+    i=0
+    simgnn_values = np.zeros((tot_num_parts, tot_num_parts))
+    for gh_i in graphs_direct:
+        for ph_i in gh_i.parts:
+            names_parts.append(gh_i.get_name()+"-"+ph_i.get_name())
+            j = 0
+            for gh_j in graphs_direct:
+                for ph_j in gh_j.parts:
+                    i_name = gh_i.get_name()+"-"+ph_i.get_name()
+                    j_name = gh_j.get_name()+"-"+ph_j.get_name()
+                    print("Evaluating " + i_name + " " + j_name)
+
+                    prediction = trainer.evaluate(ph_i, ph_j)
+                    simgnn_values[i, j] = prediction
+                    j += 1
+            i += 1
+
+    gw_discrepancy_only_parts_schema = make_schema(simgnn_values, names_parts)
+    dataFrame_dict["simgnn_schema"] = gw_discrepancy_only_parts_schema
+    high_max = [False]
+    write_dataFrame(df_dict=dataFrame_dict, file_name='simgnn_match.xlsx',  base_path=results_path, high_max=high_max)
 
 
 if __name__ == "__main__":

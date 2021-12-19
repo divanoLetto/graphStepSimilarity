@@ -272,6 +272,15 @@ class SimGNNTrainer(object):
             print("t-p-tr-pr-ged- diff: (" + format(v[0], '.3f') + "," + format(v[1], '.3f') + "," + format(v[2], '.3f') + "," + format(v[3], '.3f') + "," + format(v[4], '.3f') + "  " + format(abs(v[4]-v[3]), '.3f')+ " )")
         self.print_evaluation()
 
+    def evaluate(self, g1, g2):
+        graph_pair = (g1, g2, 0)
+        self.model.eval()
+        data = process_pair_graphh(graph_pair)
+        data = self.transfer_to_torch(data)
+        prediction = self.model(data)
+        prediction_recostructed = -math.log(prediction.item())
+        return prediction_recostructed
+
     def print_evaluation(self):
         """
         Printing the error rates.
