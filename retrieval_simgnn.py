@@ -21,6 +21,7 @@ def main():
     model_name = "model1"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
     model_load_path = model_save_path  # None
+    excel_save_name = "simgnn_match_all.xlsx"
     epochs = 1
     train = False
     load = True
@@ -83,7 +84,7 @@ def main():
     gw_discrepancy_only_parts_schema = make_schema(simgnn_values, names_parts)
     dataFrame_dict["simgnn_schema"] = gw_discrepancy_only_parts_schema
     high_max = [False]
-    write_dataFrame(df_dict=dataFrame_dict, file_name='simgnn_match.xlsx',  base_path=results_path, high_max=high_max)
+    write_dataFrame(df_dict=dataFrame_dict, file_name=excel_save_name,  base_path=results_path, high_max=high_max)
 
 
 if __name__ == "__main__":
