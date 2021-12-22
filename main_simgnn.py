@@ -14,10 +14,10 @@ from utils import split_training_testset
 def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
-    path_dataset = base_path + "/Dataset/"
+    path_dataset = base_path + "/Datasets/"
     results_path = base_path + "/results/simgnn/"
     image_dir_path = base_path + "/images/models_images/"
-    excel_path = base_path + "/results/wassertein/parts_score_match.xlsx"
+    excel_path = base_path + "/results/wassertein/ww_parts_score.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
     model_name = "model1"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name

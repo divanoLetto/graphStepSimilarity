@@ -20,7 +20,7 @@ def parse_file(file_name, dataset_path):
 
 
 def parse_header(file_name):
-    file_name = "C:/Users/Computer/PycharmProjects/graphStepSimilarity/Dataset/" + file_name
+    file_name = "C:/Users/Computer/PycharmProjects/graphStepSimilarity/Datasets/" + file_name
     with open(file_name) as f:
         data = f.read()
         datas = data.split("\n")

@@ -37,8 +37,8 @@ def main():
     perc_train_test = 0.7
     num_retrieval_accepted = 5
     base_path = str(pathlib.Path(__file__).parent).replace("\\","/")
-    path_dataset = base_path + "/Dataset/"
-    excel_path = base_path + "/results/wassertein/parts_score_match.xlsx"
+    path_dataset = base_path + "/Datasets/"
+    excel_path = base_path + "/results/wassertein/ww_parts_score.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
     for file in os.listdir(path_dataset):
         if file.endswith(".stp") or file.endswith(".step"):

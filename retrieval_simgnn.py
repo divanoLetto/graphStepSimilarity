@@ -14,19 +14,14 @@ from utils import make_schema
 def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
-    path_dataset = base_path + "/Dataset/"
-    results_path = base_path + "/results/simgnn/"
-    image_dir_path = base_path + "/images/models_images/"
+    path_dataset = base_path + "/Datasets/Dataset5/Models/"
+    results_path = base_path + "/Datasets/Dataset5/results/simgnn/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
     model_name = "model1"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
     model_load_path = model_save_path  # None
-    excel_save_name = "simgnn_match_all.xlsx"
+    excel_save_name = "simgnn_score.xlsx"
     epochs = 1
-    train = False
-    load = True
-    perc_train_test = 0.7
-    save_epochs = 5
     seed = 0
     random.seed(seed)
     dataFrame_dict = {}

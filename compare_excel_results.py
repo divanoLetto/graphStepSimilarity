@@ -4,8 +4,8 @@ import pandas as pd
 
 def main():
     base_path = str(pathlib.Path(__file__).parent)
-    ground_truth_path = base_path + "/results/wassertein/parts_score_match.xlsx"
-    excel2_path = base_path + "/results/simgnn/simgnn_match.xlsx"
+    ground_truth_path = base_path + "/Datasets/Dataset2/results/wasserstein/ww_parts_score.xlsx"
+    excel2_path = base_path + "/Datasets/Dataset2/results/simgnn/simgnn_score.xlsx"
     num_corrected_retrieval = 8
 
     df1 = pd.read_excel(ground_truth_path)
@@ -33,15 +33,15 @@ def main():
     if len(df1.keys()) != len(df2.keys()):
         raise Exception("Dimentions of excel files not matching")
 
-    names = list(df1.columns.values)[1:]
+    names = list(df1.iloc[0, 1:])
 
-    score_matrix1 = df1.to_numpy()
+    score_matrix1 = df1.iloc[1:, 1:].to_numpy()
     matrix_retrival1 = []
     for i, matrix_row in enumerate(score_matrix1):
         row_names = zip(matrix_row, names)
         row_names_sorted = sorted(row_names, key=lambda x: x[0])
         matrix_retrival1.append([t[1] for t in row_names_sorted])
-    score_matrix2 = df2.to_numpy()
+    score_matrix2 = df2.iloc[1:, 1:].to_numpy()
     matrix_retrival2 = []
     for i, matrix_row in enumerate(score_matrix2):
         row_names = zip(matrix_row, names)
@@ -50,6 +50,41 @@ def main():
 
     true_matrix_retrieval1 = []
     for row in matrix_retrival1:
+        true_matrix_retrieval1.append(row[:num_corrected_retrieval])
+
+    mAP = 0
+    for i in range(len(score_matrix1[0])):
+        row_predicted = matrix_retrival1[i]
+        row_ground_truth = true_matrix_retrieval1[i]
+        ap = 0
+        count = 0
+        num_found = 0
+        for element in row_predicted:
+            count += 1
+            if element in row_ground_truth:
+                num_found += 1
+                ap += num_found / count
+        ap = ap/num_corrected_retrieval
+        mAP += ap
+    mAP = mAP / len(score_matrix1[0])
+    print("Perfect mAP " +str(mAP))
+
+    mAP = 0
+    for i in range(len(score_matrix1[0])):
+        row_predicted = matrix_retrival2[i]
+        row_ground_truth = true_matrix_retrieval1[i]
+        ap = 0
+        count = 0
+        num_found = 0
+        for element in row_predicted:
+            count += 1
+            if element in row_ground_truth:
+                num_found += 1
+                ap += num_found/count
+        ap = ap/num_corrected_retrieval
+        mAP += ap
+    mAP = mAP/len(score_matrix1[0])
+    print("mAP " +str(mAP))
 
 
 if __name__ == "__main__":

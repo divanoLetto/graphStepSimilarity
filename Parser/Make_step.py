@@ -3,7 +3,7 @@ from Parser.Parser import parse_file, parse_header
 
 
 def make_step_from_graph(step_file, full_graph, graph, graph_file_name, full_graph_conteiner):
-    base_path = "/Dataset/recostructed/"
+    base_path = "/Datasets/recostructed/"
 
     full_graph_nodes = full_graph.nodes()
     graph_nodes = graph.nodes()

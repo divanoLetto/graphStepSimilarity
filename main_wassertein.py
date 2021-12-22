@@ -5,21 +5,18 @@ from Printing_and_plotting.Printing import write_dataFrame, write_dataFrame_by_i
 import numpy as np
 import os
 from utils import make_schema
-from scipy.optimize import linear_sum_assignment
 import pathlib
 
 
 def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent).replace("\\", "/")
-    path_dataset = base_path + "/Dataset/"
-    results_path = base_path + "/results/wassertein/"
+    path_dataset = base_path + "/Datasets/Dataset2/Models/"
+    results_path = base_path + "/Datasets/Dataset2/results/wasserstein/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    # image_models_dir_path = base_path + "/images/models_images/"
-    # image_parts_dir_path = base_path + "/images/models_images/parts/"
-    parts_graph_saves_path = base_path + "/matrix_saves/GwGt_direct/parts_graph_match/"
+    parts_graph_saves_path = base_path + "/Datasets/Dataset2/results/wasserstein/parts_graph_match/"
     # Wasserstein options
-    num_iter = 2000
+    num_iter = 20
     ot_dict = {'loss_type': 'L2', 'ot_method': 'proximal', 'beta': 0.025, 'outer_iteration': num_iter,
                'iter_bound': 1e-30, 'inner_iteration': 2, 'sk_bound': 1e-30, 'node_prior': 1e3, 'max_iter': 4,
                'cost_bound': 1e-26, 'update_p': False, 'lr': 0, 'alpha': 0}
@@ -30,7 +27,6 @@ def main():
     names = [os.path.splitext(f)[0] for f in file_names]
 
     # dataframe for save results in excel
-
     dataFrame_dict_parts = {}
 
     print("Realizing graphs")
@@ -80,7 +76,7 @@ def main():
     dataFrame_dict_parts["gw_parts_schema"] = gw_discrepancy_only_parts_schema
 
     high_max = [False]
-    write_dataFrame(df_dict=dataFrame_dict_parts, file_name='parts_score_match.xlsx',  base_path=results_path, high_max=high_max)
+    write_dataFrame(df_dict=dataFrame_dict_parts, file_name='ww_parts_score.xlsx',  base_path=results_path, high_max=high_max)
 
 
 if __name__ == "__main__":
