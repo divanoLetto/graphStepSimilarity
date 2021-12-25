@@ -74,3 +74,22 @@ def calculate_normalized_ged(data):
 def reverse_normalized_ged(value):
     value = value
     return value
+
+
+def write_list(llist, save_path):
+    with open(save_path, 'w') as filehandle:
+        for listitem in llist:
+            filehandle.write('%s\n' % listitem)
+
+
+def read_list(read_path):
+    llist = []
+    # open file and read the content in a list
+    with open(read_path, 'r') as filehandle:
+        for line in filehandle:
+            # remove linebreak which is the last character of the string
+            listitem = line[:-1]
+            # add item to the list
+            llist.append(listitem)
+    return llist
+

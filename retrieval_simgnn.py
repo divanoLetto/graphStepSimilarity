@@ -14,13 +14,15 @@ from utils import make_schema
 def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
-    path_dataset = base_path + "/Datasets/Dataset5/Models/"
-    results_path = base_path + "/Datasets/Dataset5/results/simgnn/"
+    path_dataset = base_path + "/Datasets/Dataset4/Models/"
+    results_path = base_path + "/Datasets/Dataset4/results/simgnn/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
     model_name = "model1"
     model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
     model_load_path = model_save_path  # None
     excel_save_name = "simgnn_score.xlsx"
+    labels_name = "labels_saves.txt"
+    labels_path = base_path + "/Graph_similarity/SimGNN/saves/" + labels_name
     epochs = 1
     seed = 0
     random.seed(seed)
@@ -51,7 +53,7 @@ def main():
 
     args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
-    trainer = SimGNNTrainer_Big(args, all_set, [])
+    trainer = SimGNNTrainer_Big(args, all_set, [], labels_path)
     trainer.load()
 
     tot_num_parts = 0

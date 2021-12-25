@@ -6,8 +6,9 @@ import numpy as np
 from tqdm import tqdm, trange
 from torch_geometric.nn import GCNConv
 from .layers import AttentionModule, TenorNetworkModule
-from .utils import process_pair, calculate_loss, calculate_normalized_ged, process_pair_graphh
+from .utils import process_pair, calculate_loss, calculate_normalized_ged, process_pair_graphh, read_list, write_list
 from torch.utils.tensorboard import SummaryWriter
+import os
 
 
 class SimGNN(torch.nn.Module):
@@ -118,12 +119,12 @@ class SimGNNTrainer(object):
     """
     SimGNN model trainer.
     """
-    def __init__(self, args, training_set, test_set):
+    def __init__(self, args, training_set, test_set, labels_path):
         """
         :param args: Arguments object.
         """
         self.args = args
-        self.initial_label_enumeration(training_set, test_set)
+        self.initial_label_enumeration(training_set, test_set, labels_path)
         self.setup_model()
 
     def setup_model(self):
@@ -132,7 +133,7 @@ class SimGNNTrainer(object):
         """
         self.model = SimGNN(self.args, self.number_of_labels)
 
-    def initial_label_enumeration(self, training_set, test_set):
+    def initial_label_enumeration(self, training_set, test_set, read_path):
         """
         Collecting the unique node idsentifiers.
         """
@@ -146,9 +147,16 @@ class SimGNNTrainer(object):
             labels2 = graph_pair[1].get_labels()
             self.global_labels = self.global_labels.union(set(labels1))
             self.global_labels = self.global_labels.union(set(labels2))
+        # Read past labels
+        if not os.path.isfile(read_path):
+            open(read_path, "w+")
+        old_global_labels = set(read_list(read_path))
+        self.global_labels = self.global_labels.union(old_global_labels)
         self.global_labels = sorted(self.global_labels)
+        write_list(list(self.global_labels), read_path)
         self.global_labels = {val: index for index, val in enumerate(self.global_labels)}
         self.number_of_labels = len(self.global_labels)
+
 
     def create_batches(self):
         """

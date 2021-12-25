@@ -72,8 +72,8 @@ class SimGNN_Big(SimGNN):
 
 
 class SimGNNTrainer_Big(SimGNNTrainer):
-    def __init__(self, args, training_set, test_set):
-        super().__init__(args, training_set, test_set)
+    def __init__(self, args, training_set, test_set, labels_path):
+        super().__init__(args, training_set, test_set, labels_path)
 
     def setup_model(self):
         self.model = SimGNN_Big(self.args, self.number_of_labels)
