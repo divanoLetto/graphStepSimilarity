@@ -13,17 +13,17 @@ from utils import split_training_testset
 def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
-    path_dataset = base_path + "/Datasets/"
-    results_path = base_path + "/results/simgnn/"
-    image_dir_path = base_path + "/images/models_images/"
-    excel_path = base_path + "/results/wassertein/ww_parts_score.xlsx"
+    path_dataset = base_path + "/Datasets/DS_4/Models/"
+    excel_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_parts_score.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model1"
-    model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
+    model_name = "model256_26_12"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/" + model_name
     model_load_path = model_save_path  # None
-    epochs = 1
-    train = False
-    load = True
+    labels_name = "labels_saves.txt"
+    labels_path = base_path + "/Graph_similarity/SimGNN/saves/" + labels_name
+    epochs = 70
+    train = True
+    load = False
     perc_train_test = 0.7
     save_epochs = 5
     seed = 0
@@ -82,7 +82,7 @@ def main():
     training_set, test_set = split_training_testset(all_set, perc_train_test)
     args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
-    trainer = SimGNNTrainer_Big(args, training_set, test_set)
+    trainer = SimGNNTrainer_Big(args, training_set, test_set, labels_path)
     if load:
         print("Load")
         trainer.load()

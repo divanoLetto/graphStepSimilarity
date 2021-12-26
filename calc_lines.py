@@ -1,6 +1,5 @@
 import os
 import pathlib
-
 from Graphh.Graphh import Graphh
 from Parser.Make_graph import make_graph_simplex_direct
 
@@ -9,9 +8,9 @@ def calc_lines_files():
 
     base_path = str(pathlib.Path(__file__).parent)
     path_dataset = base_path + "/Datasets/"
-    dataset_name = "Dataset5/Models/"
+    dataset_name = "DS_6/Models/"
     path_dataset = path_dataset + dataset_name
-    print("Dataset at location: '" + dataset_name + "' properties:\n")
+    print("Models at location: '" + dataset_name + "' properties:\n")
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
 
     file_names = []
@@ -42,9 +41,9 @@ def calc_lines_files():
 
     print("\nNumber of lines x model:")
     for filename in os.listdir(path_dataset):
-       with open(os.path.join(path_dataset, filename), 'r') as f: # open in readonly mode
-           num_lines = sum(1 for line in f)
-           print("  "+str(filename) + " : " + str(num_lines))
+        with open(os.path.join(path_dataset, filename), 'r') as f: # open in readonly mode
+            num_lines = sum(1 for line in f)
+            print("  "+str(filename) + " : " + str(num_lines))
 
 
 calc_lines_files()

@@ -26,12 +26,12 @@ def parameter_parser(model_save_path, model_load_path, epochs):
 
     parser.add_argument("--filters-1",
                         type=int,
-                        default=1024,
+                        default=256,
 	                help="Filters (neurons) in 1st convolution. Default is 1024.")
 
     parser.add_argument("--filters-2",
                         type=int,
-                        default=512,
+                        default=256,
 	                help="Filters (neurons) in 2nd convolution. Default is 512.")
 
     parser.add_argument("--filters-3",
@@ -66,7 +66,7 @@ def parameter_parser(model_save_path, model_load_path, epochs):
 
     parser.add_argument("--batch-size",
                         type=int,
-                        default=128,
+                        default=256,
 	                help="Number of graph pairs per batch. Default is 128.")
 
     parser.add_argument("--bins",
