@@ -126,6 +126,11 @@ def split_training_testset(all_set, perc):
     random.shuffle(all_set)
     training_set = all_set[:num_train_elem]
     test_set = all_set[-num_test_elem:]
+
+    print("\nTrainset dim: " + str(num_train_elem))
+    print("Testset dim: " + str(num_test_elem))
+    print()
+
     return training_set, test_set
 
 
