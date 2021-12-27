@@ -9,6 +9,8 @@ def get_next_batch(batch_size, training_set, one_hot_dict):
         batch_graphs = []
         batch_labels = []
         for _ in range(batch_size):
+            if i >= len(training_set):
+                i = 0
             g1, g2, sim = training_set[i]
             batch_graphs.append((g1, g2))
             batch_labels.append(sim)
