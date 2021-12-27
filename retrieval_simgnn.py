@@ -14,11 +14,11 @@ from utils import make_schema
 def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
-    path_dataset = base_path + "/Datasets/Dataset4/Models/"
-    results_path = base_path + "/Datasets/Dataset4/results/simgnn/"
+    path_dataset = base_path + "/Datasets/DS_4/Models/"
+    results_path = base_path + "/Datasets/DS_4/results/simgnn/256/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model1"
-    model_save_path = base_path + "/Graph_similarity/SimGNN/saves/" + model_name
+    model_name = "model256_26_12"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/256/" + model_name
     model_load_path = model_save_path  # None
     excel_save_name = "simgnn_score.xlsx"
     labels_name = "labels_saves.txt"

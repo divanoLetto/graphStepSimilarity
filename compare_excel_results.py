@@ -4,8 +4,8 @@ import pandas as pd
 
 def main():
     base_path = str(pathlib.Path(__file__).parent)
-    ground_truth_path = base_path + "/Datasets/Dataset2/results/wasserstein/ww_parts_score.xlsx"
-    excel2_path = base_path + "/Datasets/Dataset2/results/simgnn/simgnn_score.xlsx"
+    ground_truth_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_parts_score.xlsx"
+    excel2_path = base_path + "/Datasets/DS_4/results/simgnn/simgnn_score.xlsx"
     num_corrected_retrieval = 8
 
     df1 = pd.read_excel(ground_truth_path)
