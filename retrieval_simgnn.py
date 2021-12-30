@@ -1,4 +1,5 @@
 from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big, SimGNN_Big
+from Graph_similarity.SimGNN.src.simgnn_slim import SimGNNTrainer_slim256
 from Graph_similarity.SimGNN.src.utils import tab_printer
 from Graph_similarity.SimGNN.src.param_parser import parameter_parser
 from Graphh.Graphh import Graphh
@@ -15,10 +16,10 @@ def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
     path_dataset = base_path + "/Datasets/DS_4/Models/"
-    results_path = base_path + "/Datasets/DS_4/results/simgnn/256/"
+    results_path = base_path + "/Datasets/DS_4/results/simgnn/slim_256/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model256_26_12"
-    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/256/" + model_name
+    model_name = "model_slim_256_27_12"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/slim_256/" + model_name
     model_load_path = model_save_path  # None
     excel_save_name = "simgnn_score.xlsx"
     labels_name = "labels_saves.txt"
@@ -53,7 +54,7 @@ def main():
 
     args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
-    trainer = SimGNNTrainer_Big(args, all_set, [], labels_path)
+    trainer = SimGNNTrainer_slim256(args, all_set, [], labels_path)
     trainer.load()
 
     tot_num_parts = 0
@@ -62,6 +63,7 @@ def main():
 
     names_parts = []
     i=0
+    times = []
     simgnn_values = np.zeros((tot_num_parts, tot_num_parts))
     for gh_i in graphs_direct:
         for ph_i in gh_i.parts:
@@ -73,11 +75,14 @@ def main():
                     j_name = gh_j.get_name()+"-"+ph_j.get_name()
                     print("Evaluating " + i_name + " " + j_name)
 
+                    start_time = time.time()
                     prediction = trainer.evaluate(ph_i, ph_j)
+                    times.append(start_time - time.time())
                     simgnn_values[i, j] = prediction
                     j += 1
             i += 1
 
+    print("Mean evaluation time: " + str(np.mean(times)))
     gw_discrepancy_only_parts_schema = make_schema(simgnn_values, names_parts)
     dataFrame_dict["simgnn_schema"] = gw_discrepancy_only_parts_schema
     high_max = [False]
