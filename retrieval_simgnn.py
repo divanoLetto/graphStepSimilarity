@@ -1,5 +1,6 @@
+from scipy.optimize import linear_sum_assignment
+
 from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big, SimGNN_Big
-from Graph_similarity.SimGNN.src.simgnn_slim import SimGNNTrainer_slim256
 from Graph_similarity.SimGNN.src.utils import tab_printer
 from Graph_similarity.SimGNN.src.param_parser import parameter_parser
 from Graphh.Graphh import Graphh
@@ -16,18 +17,18 @@ def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
     path_dataset = base_path + "/Datasets/DS_4/Models/"
-    results_path = base_path + "/Datasets/DS_4/results/simgnn/slim_256/"
+    results_path = base_path + "/Datasets/DS_4/results/simgnn/512/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model_slim_256_27_12"
-    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/slim_256/" + model_name
+    model_name = "model512_27_12"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/512/" + model_name
     model_load_path = model_save_path  # None
-    excel_save_name = "simgnn_score.xlsx"
+    excel_save_name_comp = "simgnn_components_score.xlsx"
+    excel_save_name_models = "simgnn_models_score.xlsx"
     labels_name = "labels_saves.txt"
     labels_path = base_path + "/Graph_similarity/SimGNN/saves/" + labels_name
     epochs = 1
     seed = 0
     random.seed(seed)
-    dataFrame_dict = {}
 
     for file in os.listdir(path_dataset):
         if file.endswith(".stp") or file.endswith(".step"):
@@ -54,15 +55,48 @@ def main():
 
     args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
-    trainer = SimGNNTrainer_slim256(args, all_set, [], labels_path)
+    trainer = SimGNNTrainer_Big(args, all_set, [], labels_path)
     trainer.load()
 
     tot_num_parts = 0
     for i, gh_i in enumerate(graphs_direct):
         tot_num_parts += len(gh_i.parts)
 
+    # Retrieval for models
+    num_models = len(graphs_direct)
+    simgnn_values = np.zeros((num_models, num_models))
+    names_models = []
+    times = []
+    for i, gh_i in enumerate(graphs_direct):
+        names_models.append(gh_i.get_name())
+        for j, gh_j in enumerate(graphs_direct):
+            i_name = gh_i.get_name()
+            j_name = gh_j.get_name()
+            print("Evaluating " + i_name + " " + j_name)
+
+            start_time = time.time()
+            num_gh_i_parts = len(gh_i.parts)
+            num_gh_j_parts = len(gh_j.parts)
+            components_matrix = np.zeros((num_gh_i_parts, num_gh_j_parts))
+            for z, ph_i in enumerate(gh_i.parts):
+                for k, ph_j in enumerate(gh_j.parts):
+                    prediction = trainer.evaluate(ph_i, ph_j)
+                    components_matrix[z, k] = prediction
+
+            comp_occ_matrix = Graphh.get_occ_match_matrix(components_matrix, gh_i, gh_j)
+            # algoritmo ungherese
+            row_ind, col_ind = linear_sum_assignment(comp_occ_matrix)
+            best_assg = comp_occ_matrix[row_ind, col_ind].sum()
+            simgnn_values[i, j] = best_assg + abs(gh_i.get_tot_num_parts_occurences() - gh_j.get_tot_num_parts_occurences())
+            times.append(time.time() - start_time)
+
+    print("Mean models evaluation time: " + str(np.mean(times)))
+    df_score_models = make_schema(simgnn_values, names_models)
+    write_dataFrame(dataframe=df_score_models, file_name=excel_save_name_models, base_path=results_path, high_max=False)
+
+    # Retrieval for components
     names_parts = []
-    i=0
+    i = 0
     times = []
     simgnn_values = np.zeros((tot_num_parts, tot_num_parts))
     for gh_i in graphs_direct:
@@ -82,11 +116,9 @@ def main():
                     j += 1
             i += 1
 
-    print("Mean evaluation time: " + str(np.mean(times)))
-    gw_discrepancy_only_parts_schema = make_schema(simgnn_values, names_parts)
-    dataFrame_dict["simgnn_schema"] = gw_discrepancy_only_parts_schema
-    high_max = [False]
-    write_dataFrame(df_dict=dataFrame_dict, file_name=excel_save_name,  base_path=results_path, high_max=high_max)
+    print("Mean components evaluation time: " + str(np.mean(times)))
+    df_score_componets = make_schema(simgnn_values, names_parts)
+    write_dataFrame(dataframe=df_score_componets, file_name=excel_save_name_comp, base_path=results_path, high_max=False)
 
 
 if __name__ == "__main__":

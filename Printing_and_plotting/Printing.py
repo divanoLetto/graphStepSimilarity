@@ -61,31 +61,28 @@ def highlight_min(df):
     return pd.DataFrame(prop_matrix, index=df.index, columns=df.columns)
 
 
-def write_dataFrame(df_dict, file_name, high_max, base_path=""):
+def write_dataFrame(dataframe, file_name, high_max, base_path=""):
     spaces = 1
     file_name = base_path + file_name
     writer = pd.ExcelWriter(file_name, engine="openpyxl")
     row = 0
-    for idx, (dataframe_key, dataframe) in enumerate(df_dict.items()):
-        header = DataFrame([dataframe_key])
-        header.to_excel(writer, startrow=row, startcol=0, header=None, index=None)
-        row = row + 1
-        tmp_list = []
-        count = 0
-        for col in dataframe.columns:
-            if col in tmp_list:
-                col = col + "_" + str(count)
-                count = count + 1
-            tmp_list.append(col)
-        dataframe.columns = tmp_list
-        dataframe.index = tmp_list
+    row = row + 1
+    tmp_list = []
+    count = 0
+    for col in dataframe.columns:
+        if col in tmp_list:
+            col = col + "_" + str(count)
+            count = count + 1
+        tmp_list.append(col)
+    dataframe.columns = tmp_list
+    dataframe.index = tmp_list
 
-        if high_max[idx]:
-            dataframe.style.apply(highlight_max, axis=None).to_excel(writer, startrow=row, startcol=0)
-        else:
-            dataframe.style.apply(highlight_min, axis=None).to_excel(writer, startrow=row, startcol=0)
-        # dataframe.to_excel(writer, sheet_name=sheets, startrow=row, startcol=0)
-        row = row + len(dataframe.index) + spaces + 1
+    if high_max:
+        dataframe.style.apply(highlight_max, axis=None).to_excel(writer, startrow=row, startcol=0)
+    else:
+        dataframe.style.apply(highlight_min, axis=None).to_excel(writer, startrow=row, startcol=0)
+    # dataframe.to_excel(writer, sheet_name=sheets, startrow=row, startcol=0)
+    row = row + len(dataframe.index) + spaces + 1
     writer.save()
 
 

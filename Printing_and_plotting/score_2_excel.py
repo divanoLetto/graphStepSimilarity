@@ -3,7 +3,7 @@ import os
 from Printing_and_plotting.Printing import write_dataFrame_by_images
 
 
-def score_2_excel(excel_score_path, high_max, image_dir_path, save_name, scale_x=0.03, scale_y=0.03):
+def score_2_excel(excel_score_path, high_max, image_dir_path, save_name, scale_x=0.07, scale_y=0.07):
     df = pd.read_excel(excel_score_path, skiprows=1)
     dir_path = os.path.dirname(excel_score_path)
     results_path = dir_path + "/"

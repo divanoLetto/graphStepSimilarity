@@ -1,6 +1,4 @@
-from Graph_similarity.SimGNN.src.simgnn import SimGNNTrainer
 from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big
-from Graph_similarity.SimGNN.src.simgnn_slim import SimGNNTrainer_slim256
 from Graph_similarity.SimGNN.src.utils import tab_printer
 from Graph_similarity.SimGNN.src.param_parser import parameter_parser
 from Graphh.Graphh import Graphh
@@ -18,14 +16,14 @@ def main():
     path_dataset = base_path + "/Datasets/DS_4/Models/"
     excel_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_parts_score.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model_slim_256_27_12"
-    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/slim_256/" + model_name
+    model_name = "model256_26_12"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/" + model_name
     model_load_path = model_save_path  # None
     labels_name = "labels_saves.txt"
     labels_path = base_path + "/Graph_similarity/SimGNN/saves/" + labels_name
     epochs = 70
-    train = True
-    load = False
+    train = False
+    load = True
     perc_train_test = 0.7
     save_epochs = 5
     seed = 0
@@ -43,12 +41,6 @@ def main():
         g = Graphh(list_graphs[id_name], name)
         graphs_direct.append(g)
 
-    num_models = len(graphs_direct)
-    print(str(num_models) + " models")
-    num_components = 0
-    for g in graphs_direct:
-        num_components += g.get_num_parts()
-    print(str(num_components) + " total components\n")
     for g in graphs_direct:
         g.print_composition()
 
@@ -90,7 +82,7 @@ def main():
     training_set, test_set = split_training_testset(all_set, perc_train_test)
     args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
-    trainer = SimGNNTrainer_slim256(args, training_set, test_set, labels_path)
+    trainer = SimGNNTrainer_Big(args, training_set, test_set, labels_path)
     if load:
         print("Load")
         trainer.load()
