@@ -77,7 +77,7 @@ def main():
 
                     start_time = time.time()
                     prediction = trainer.evaluate(ph_i, ph_j)
-                    times.append(start_time - time.time())
+                    times.append(time.time() - start_time)
                     simgnn_values[i, j] = prediction
                     j += 1
             i += 1
