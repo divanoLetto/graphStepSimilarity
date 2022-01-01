@@ -53,7 +53,7 @@ def get_default_config():
                 n_changes_negative=2,
                 validation_dataset_size=1000)),
         training=dict(
-            batch_size=6,
+            batch_size=10,#6
             learning_rate=1e-4,
             mode='pair',
             loss='margin',  # other: hamming
@@ -74,6 +74,6 @@ def get_default_config():
             # Evaluate on validation set every `eval_after * print_after` steps.
             eval_after=10),
         evaluation=dict(
-            batch_size=6),
+            batch_size=10),#6
         seed=8,
     )

@@ -4,9 +4,9 @@ import pandas as pd
 
 def main():
     base_path = str(pathlib.Path(__file__).parent)
-    ground_truth_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_models_score.xlsx"
-    excel2_path = base_path + "/Datasets/DS_4/results/simgnn/256/simgnn_models_score.xlsx"
-    num_corrected_retrieval = 3
+    ground_truth_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_components_score.xlsx"
+    excel2_path = base_path + "/Datasets/DS_4/results/simgnn/slim_256/simgnn_components_score.xlsx"
+    num_corrected_retrieval = 8
 
     df1 = pd.read_excel(ground_truth_path)
     double_hash1 = {}

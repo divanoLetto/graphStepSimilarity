@@ -40,7 +40,7 @@ def main():
     path_dataset = base_path + "/Datasets/DS_4/Models/"
     excel_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_parts_score.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    models_name = "models_26_12"
+    models_name = "models_02_01"
     save_model_path = base_path + "/Datasets/DS_4/results/gmn/" + models_name
     train = False
     load = True

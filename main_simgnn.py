@@ -14,10 +14,10 @@ def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
     path_dataset = base_path + "/Datasets/DS_4/Models/"
-    excel_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_parts_score.xlsx"
+    excel_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_components_score.xlsx"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model256_26_12"
-    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/" + model_name
+    model_name = "model1"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/1024/" + model_name
     model_load_path = model_save_path  # None
     labels_name = "labels_saves.txt"
     labels_path = base_path + "/Graph_similarity/SimGNN/saves/" + labels_name
@@ -28,6 +28,7 @@ def main():
     save_epochs = 5
     seed = 0
     random.seed(seed)
+    args = parameter_parser_1024(model_save_path, model_load_path, epochs=epochs)
 
     for file in os.listdir(path_dataset):
         if file.endswith(".stp") or file.endswith(".step"):
@@ -80,7 +81,6 @@ def main():
     all_set = one_set + not_one_set
 
     training_set, test_set = split_training_testset(all_set, perc_train_test)
-    args = parameter_parser_1024(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
     trainer = SimGNNTrainer_Big(args, training_set, test_set, labels_path)
     if load:
