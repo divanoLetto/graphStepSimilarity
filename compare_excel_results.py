@@ -4,9 +4,9 @@ import pandas as pd
 
 def main():
     base_path = str(pathlib.Path(__file__).parent)
-    ground_truth_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_parts_score.xlsx"
-    excel2_path = base_path + "/Datasets/DS_4/results/simgnn/simgnn_score.xlsx"
-    num_corrected_retrieval = 8
+    ground_truth_path = base_path + "/Datasets/DS_4/results/wasserstein/ww_models_score.xlsx"
+    excel2_path = base_path + "/Datasets/DS_4/results/simgnn/256/simgnn_models_score.xlsx"
+    num_corrected_retrieval = 3
 
     df1 = pd.read_excel(ground_truth_path)
     double_hash1 = {}
@@ -30,32 +30,33 @@ def main():
                 double_hash2[i_name] = {}
             double_hash2[i_name][j_name] = dist
 
-    if len(df1.keys()) != len(df2.keys()):
+    num_item_1 = len(double_hash1.keys())
+    num_item_2 = len(double_hash2.keys())
+    if num_item_1 != num_item_2:
         raise Exception("Dimentions of excel files not matching")
 
-    names = list(df1.iloc[0, 1:])
+    matrix_retrival1 = {}
+    for a_key, row in double_hash1.items():
+        listt = row.items()
+        listt_sorted = sorted(listt, key=lambda x: x[1])
+        row_names_sorted = [l[0] for l in listt_sorted]
+        matrix_retrival1[a_key] = row_names_sorted
 
-    score_matrix1 = df1.iloc[1:, 1:].to_numpy()
-    matrix_retrival1 = []
-    for i, matrix_row in enumerate(score_matrix1):
-        row_names = zip(matrix_row, names)
-        row_names_sorted = sorted(row_names, key=lambda x: x[0])
-        matrix_retrival1.append([t[1] for t in row_names_sorted])
-    score_matrix2 = df2.iloc[1:, 1:].to_numpy()
-    matrix_retrival2 = []
-    for i, matrix_row in enumerate(score_matrix2):
-        row_names = zip(matrix_row, names)
-        row_names_sorted = sorted(row_names, key=lambda x: x[0])
-        matrix_retrival2.append([t[1] for t in row_names_sorted])
+    matrix_retrival2 = {}
+    for a_key, row in double_hash2.items():
+        listt = row.items()
+        listt_sorted = sorted(listt, key=lambda x: x[1])
+        row_names_sorted = [l[0] for l in listt_sorted]
+        matrix_retrival2[a_key] = row_names_sorted
 
-    true_matrix_retrieval1 = []
-    for row in matrix_retrival1:
-        true_matrix_retrieval1.append(row[:num_corrected_retrieval])
+    target_matrix_retrieval = {}
+    for key, row in matrix_retrival1.items():
+        target_matrix_retrieval[key] = row[:num_corrected_retrieval]
 
     mAP = 0
-    for i in range(len(score_matrix1[0])):
-        row_predicted = matrix_retrival1[i]
-        row_ground_truth = true_matrix_retrieval1[i]
+    for key in target_matrix_retrieval.keys():
+        row_predicted = matrix_retrival1[key]
+        row_ground_truth = target_matrix_retrieval[key]
         ap = 0
         count = 0
         num_found = 0
@@ -66,13 +67,13 @@ def main():
                 ap += num_found / count
         ap = ap/num_corrected_retrieval
         mAP += ap
-    mAP = mAP / len(score_matrix1[0])
+    mAP = mAP / num_item_1
     print("Perfect mAP " +str(mAP))
 
     mAP = 0
-    for i in range(len(score_matrix1[0])):
-        row_predicted = matrix_retrival2[i]
-        row_ground_truth = true_matrix_retrieval1[i]
+    for key in target_matrix_retrieval.keys():
+        row_predicted = matrix_retrival2[key]
+        row_ground_truth = target_matrix_retrieval[key]
         ap = 0
         count = 0
         num_found = 0
@@ -83,8 +84,8 @@ def main():
                 ap += num_found/count
         ap = ap/num_corrected_retrieval
         mAP += ap
-    mAP = mAP/len(score_matrix1[0])
-    print("mAP " +str(mAP))
+    mAP = mAP / num_item_1
+    print("mAP " + str(mAP))
 
 
 if __name__ == "__main__":

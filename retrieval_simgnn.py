@@ -1,8 +1,7 @@
 from scipy.optimize import linear_sum_assignment
-
 from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big, SimGNN_Big
 from Graph_similarity.SimGNN.src.utils import tab_printer
-from Graph_similarity.SimGNN.src.param_parser import parameter_parser
+from Graph_similarity.SimGNN.src.param_parser import parameter_parser_1024, parameter_parser_256, parameter_parser_512, parameter_parser_slim_256
 from Graphh.Graphh import Graphh
 from Parser.Make_graph import *
 import os
@@ -17,16 +16,17 @@ def main():
     file_names = []
     base_path = str(pathlib.Path(__file__).parent)
     path_dataset = base_path + "/Datasets/DS_4/Models/"
-    results_path = base_path + "/Datasets/DS_4/results/simgnn/512/"
+    results_path = base_path + "/Datasets/DS_4/results/simgnn/256/"
     graph_saves_path = base_path + "/Graphh/graph_save/simplex_direct/"
-    model_name = "model512_27_12"
-    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/512/" + model_name
+    model_name = "model256_26_12.zip"
+    model_save_path = base_path + "/Datasets/DS_4/results/simgnn/256/" + model_name
     model_load_path = model_save_path  # None
     excel_save_name_comp = "simgnn_components_score.xlsx"
     excel_save_name_models = "simgnn_models_score.xlsx"
     labels_name = "labels_saves.txt"
     labels_path = base_path + "/Graph_similarity/SimGNN/saves/" + labels_name
     epochs = 1
+    args = parameter_parser_256(model_save_path, model_load_path, epochs=epochs)
     seed = 0
     random.seed(seed)
 
@@ -53,7 +53,6 @@ def main():
                     dist = 0  # dont care
                     all_set.append([ph_i, ph_j, dist])
 
-    args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
     trainer = SimGNNTrainer_Big(args, all_set, [], labels_path)
     trainer.load()

@@ -1,6 +1,6 @@
 from Graph_similarity.SimGNN.src.simgnn_big import SimGNNTrainer_Big
 from Graph_similarity.SimGNN.src.utils import tab_printer
-from Graph_similarity.SimGNN.src.param_parser import parameter_parser
+from Graph_similarity.SimGNN.src.param_parser import parameter_parser_1024
 from Graphh.Graphh import Graphh
 from Parser.Make_graph import *
 import os
@@ -80,7 +80,7 @@ def main():
     all_set = one_set + not_one_set
 
     training_set, test_set = split_training_testset(all_set, perc_train_test)
-    args = parameter_parser(model_save_path, model_load_path, epochs=epochs)
+    args = parameter_parser_1024(model_save_path, model_load_path, epochs=epochs)
     tab_printer(args)
     trainer = SimGNNTrainer_Big(args, training_set, test_set, labels_path)
     if load:

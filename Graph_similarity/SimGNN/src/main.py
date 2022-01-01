@@ -2,14 +2,14 @@
 
 from utils import tab_printer
 from simgnn import SimGNNTrainer
-from param_parser import parameter_parser
+from param_parser import parameter_parser_1024
 
 def main():
     """
     Parsing command line parameters, reading data.
     Fitting and scoring a SimGNN model.
     """
-    args = parameter_parser()
+    args = parameter_parser_1024()
     tab_printer(args)
     trainer = SimGNNTrainer(args)
     if args.load_path:
